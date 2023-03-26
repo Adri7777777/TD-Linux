@@ -1,0 +1,52 @@
+  GNU nano 5.4                                                                                         New Buffer *                                                               
+ 
+------------------------------------------------------------------------------------------------------------------------------------------------------------ 
+  
+  Premier bash : pour recupérer la valeur du down jones avec un lien et un html :
+  cat script.sh
+  
+curl -s https://finance.yahoo.com/quote/%5EDJI | grep -oP '<fin-streamer class="Fw\(b\) Fz\(36px\) Mb\(-4px\) D\(ib\)".*value="\K[^"]+' >> Dow_Jones_Value.txt
+
+echo "$(date'+%T')" >> date.txt
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+dash pour faire un script python pour afficher les graphique des datas (et actualisation avec * * * * *):
+cat dboard.py
+
+
+
+import pandas as pd
+from dash import dcc,html,Dash
+import plotly.express as px
+import dash
+
+# Lire le fichier texte contenant la valeur extraite de l'indice Dow Jones
+df = pd.read_csv('Dow_Jones_Value.txt', header=None, names=['value'])
+
+# Créer une application Dash
+app = dash.Dash(__name__)
+
+# Définir une disposition pour votre dashboard
+app.layout = html.Div([
+    html.H1('Valeur de l\'indice Dow Jones'),
+    dcc.Graph(id='dow-jones-graph')
+])
+
+# Créer une trace pour afficher la valeur extraite de l'indice Dow Jones
+trace = px.line(df, x=df.index, y='value', title='Indice Dow Jones')
+
+# Ajouter la trace à la disposition de votre dashboard
+app.callback(dash.dependencies.Output('dow-jones-graph', 'figure'))(lambda _: trace)
+
+# Lancer l'application Dash
+if __name__ == '__main__':
+    app.run_server(debug=True)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+sudo ssh -i "LightsailDefaultKey-eu-west-3.pem" admin@15.237.53.242 
+
+#pour me connecter
+
